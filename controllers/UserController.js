@@ -7,9 +7,12 @@ export const register = async (req, res) => {
    try {
       //Crypting password
      const password = req.body.password;
+     // Creating salt(algorhytm) for password
      const salt = await bcrypt.genSalt(10);
+     // in hash variable crypted password
      const hash = await bcrypt.hash(password, salt);
  
+     // Creating new User
      const doc = new UserModel({
        email: req.body.email,
        fullName: req.body.fullName,
@@ -17,9 +20,10 @@ export const register = async (req, res) => {
        passwordHash: hash,
      });
 
-
+     // Saving User to DB
     const user = await doc.save();
-
+   
+    // Creating jwt token, inside of jwt info - user's id
     const token = jwt.sign(
       {
         _id: user._id,
@@ -46,6 +50,7 @@ export const register = async (req, res) => {
    }
 };
 
+// Searching for user in DB
 export const login = async (req, res) => {
    try {
       const user = await UserModel.findOne({ email: req.body.email });
@@ -56,6 +61,7 @@ export const login = async (req, res) => {
          })
       }
 
+      // Checking password's identity
       const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
 
       if (!isValidPass) {
@@ -91,8 +97,10 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
    try {
+      // Find user in db by id 
       const user = await UserModel.findById(req.userId);
 
+      // If user not found
       if(!user) {
          return res.status(404).json({
             message: 'Käyttäjää ei löydetty',

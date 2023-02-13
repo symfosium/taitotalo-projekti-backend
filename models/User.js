@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// User's Schema
 const UserSchema = new mongoose.Schema({
 
     fullName: {
@@ -9,6 +10,7 @@ const UserSchema = new mongoose.Schema({
     email: {
       type: String,
       required: true,
+      //email must be unique
       unique: true,
     },
     passwordHash: {
@@ -17,7 +19,9 @@ const UserSchema = new mongoose.Schema({
     },
    avatarUrl: String,
 }, {
+  // Date of creating user
    timestamps: true,
 });
 
+// Exporting User Model
 export default mongoose.model('User', UserSchema);

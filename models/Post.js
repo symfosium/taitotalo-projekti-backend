@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// Post's Schema
 const PostSchema = new mongoose.Schema(
   {
     title: {
@@ -19,6 +20,7 @@ const PostSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    //Relationship between 2 tables (User, Post)
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

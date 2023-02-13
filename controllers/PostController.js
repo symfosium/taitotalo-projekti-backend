@@ -19,8 +19,10 @@ export const getLastTags = async (req, res) => {
    }
  };
 
+ // Getting all posts
  export const getAll = async (req, res) => {
    try {
+    // populate - switching on connection with user so we can get info about user
      const posts = await PostModel.find().populate('user').exec();
      res.json(posts);
    } catch (err) {
@@ -31,15 +33,18 @@ export const getLastTags = async (req, res) => {
    }
  };
 
+ // Getting one post
  export const getOne = async (req, res) => {
    try {
      const postId = req.params.id;
- 
+    
+     // Find Post and Update it
      PostModel.findOneAndUpdate(
        {
          _id: postId,
        },
-       {
+       {  
+        // Increasing viewcounts of Post
          $inc: { viewsCount: 1 },
        },
        {
@@ -69,6 +74,7 @@ export const getLastTags = async (req, res) => {
    }
  };
 
+ // Deleting post
 export const remove = async (req, res) => {
    try {
      const postId = req.params.id;
@@ -104,7 +110,7 @@ export const remove = async (req, res) => {
    }
 };
 
-
+// Creating Post
 export const create = async (req, res) => {
    try {
       const doc = new PostModel({
@@ -115,6 +121,7 @@ export const create = async (req, res) => {
          user: req.userId,
       });
 
+      // Saving Post to db
       const post = await doc.save();
 
       res.json(post);
@@ -128,6 +135,7 @@ export const create = async (req, res) => {
          }
    };
 
+   // Updating post
 export const update = async (req,res) => {
    try {
       const postId = req.params.id;

@@ -5,9 +5,11 @@ export default(req, res, next) => {
 
    if (token) {
       try {
+         // Decoding token
          const decoded = jwt.verify(token, 'secret123');
-
+         //Decoded token going to req
          req.userId = decoded._id;
+         // If token decoded and it saved to req.userId, everything ok --> next function
          next();
       } catch(e) {
          return res.status(403).json({

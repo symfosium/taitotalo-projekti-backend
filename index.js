@@ -15,11 +15,14 @@ import User from './models/User.js';
 
 mongoose
 .connect(process.env.MONGODB_URI)
+// if connect to db ok 
 .then(() => console.log('DB ok'))
+// if error
 .catch((err) => console.log('DB error', err))
 
 const app = express();
 
+//Creating storage
 const storage = multer.diskStorage({
    destination: (_, __, cb) => {
      if (!fs.existsSync('uploads')) {
@@ -34,12 +37,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
+// reading json files in express
 app.use(express.json());
 app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
+// Route to authorization
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
+// Route to registration
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
+// Route to getting me
 app.get('/auth/me', checkAuth, UserController.getMe);
 
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
@@ -50,6 +57,7 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 
  app.get('/tags', PostController.getLastTags);
 
+// Route to posts
  app.get('/posts', PostController.getAll);
  app.get('/posts/tags', PostController.getLastTags);
  app.get('/posts/:id', PostController.getOne);
@@ -67,7 +75,7 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 
 
 
-
+// If server works - Server Ok, if not - error
 app.listen(process.env.PORT || 4444, (err) => {
    if(err) {
       return console.log(err);
